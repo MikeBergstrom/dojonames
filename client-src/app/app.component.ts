@@ -17,4 +17,9 @@ export class AppComponent {
     .then(deck => {this.deck = deck; console.log('got deck', this.deck)})
     .catch(err => {console.log(err)})
   }
+
+  clickCard(cardNum){
+    console.log(this.deck.cards[cardNum]);
+    this.deck.cards[cardNum].IsExposed = true;
+  }
 }

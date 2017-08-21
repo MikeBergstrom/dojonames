@@ -1,7 +1,11 @@
 .card {
-    border-radius: 2px solid green;
+    border: 2px solid green;
     background: #9393FF;
     height: 200px;
     padding: 5px;
     margin: 5px;
+}
+
+.testClass {
+    height: 500px;
 }
