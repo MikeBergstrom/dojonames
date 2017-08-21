@@ -1,0 +1,29 @@
+CREATE TABLE IF NOT EXISTS `dojonames`.`games` (
+  `GameId` INT NOT NULL AUTO_INCREMENT,
+  `RedScore` INT NULL,
+  `BlueScore` INT NULL,
+  `Turn` VARCHAR(255) NULL,
+  `Phase` VARCHAR(255) NULL,
+  `LastHint` VARCHAR(255) NULL,
+  `HintCount` INT NULL,
+  `CreatedAt` DATETIME NULL,
+  `UpdatedAt` DATETIME NULL,
+  PRIMARY KEY (`GameId`))
+ENGINE = InnoDB
+
+CREATE TABLE IF NOT EXISTS `dojonames`.`cards` (
+  `CardId` INT NOT NULL AUTO_INCREMENT,
+  `Text` TEXT NULL,
+  `Color` TEXT NULL,
+  `IsExposed` TINYINT NULL,
+  `CreatedAt` DATETIME NULL,
+  `UpdatedAt` DATETIME NULL,
+  `GameId` INT NOT NULL,
+  PRIMARY KEY (`CardId`),
+  INDEX `fk_cards_games_idx` (`GameId` ASC),
+  CONSTRAINT `fk_cards_games`
+    FOREIGN KEY (`GameId`)
+    REFERENCES `dojonames`.`games` (`GameId`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB

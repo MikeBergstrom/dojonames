@@ -14,13 +14,20 @@ export class ApiService {
     .toPromise();
   }
 
-  updateDeck(cardIdx){
+  updateDeck(cardId){
     console.log("updating the deck now!");
-    console.log("this is the card i am trying to update from the service", cardIdx)
-    return this._http.get(`/api/update_deck/${cardIdx}`)
+    console.log("this is the card i am trying to update from the service", cardId)
+    return this._http.get(`/api/update_deck/${cardId}`)
     .map(data => data.json())
     .toPromise();
 
+  }
+  makeNewGame()
+  {
+    console.log("going thru new game service")
+    return this._http.get('/api/create_game_in_database')
+    .map(data => data.json())
+    .toPromise();
   }
 
 }

@@ -44,10 +44,16 @@ var ApiService = (function () {
             .map(function (data) { return data.json(); })
             .toPromise();
     };
-    ApiService.prototype.updateDeck = function (cardIdx) {
+    ApiService.prototype.updateDeck = function (cardId) {
         console.log("updating the deck now!");
-        console.log("this is the card i am trying to update from the service", cardIdx);
-        return this._http.get("/api/update_deck/" + cardIdx)
+        console.log("this is the card i am trying to update from the service", cardId);
+        return this._http.get("/api/update_deck/" + cardId)
+            .map(function (data) { return data.json(); })
+            .toPromise();
+    };
+    ApiService.prototype.makeNewGame = function () {
+        console.log("going thru new game service");
+        return this._http.get('/api/create_game_in_database')
             .map(function (data) { return data.json(); })
             .toPromise();
     };
@@ -84,7 +90,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n\n{{deck.cards | json}}\n<div class='container'>\n\n  <!-- <div class='col-md-12'> -->\n    <h3>Red Team: {{redTeamScore}}</h3>\n    <h3>Blue Team: {{blueTeamScore}}</h3>\n    <div *ngIf=\"codeMaster\">\n      <div class=\"row\">\n          <div *ngFor=\"let card of deck.cards; let i = index\">\n            <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\n          </div>\n      </div>\n    </div>\n\n    <div *ngIf=\"!gamePlayer\">\n        <div class=\"row\">\n            <div *ngFor=\"let card of deck.cards; let i = index\">\n              <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\n              <div class=\"col-md-offset-1 col-md-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\n              <div class=\"col-md-2 card col-md-offset-1\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\n            </div>\n        </div>\n    </div>\n  <!-- </div> -->\n</div>\n\n\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\n\n{{deck.cards | json}}\n<div class='container'>\n\n  <!-- <div class='col-md-12'> -->\n    <h3>Red Team: {{redTeamScore}}</h3>\n    <h3>Blue Team: {{blueTeamScore}}</h3>\n    <div *ngIf=\"codeMaster\">\n      <div class=\"row\">\n          <div *ngFor=\"let card of deck.cards; let i = index\">\n            <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\n          </div>\n      </div>\n    </div>\n\n    <div *ngIf=\"gamePlayer\">\n        <div class=\"row\">\n            <div *ngFor=\"let card of deck.cards; let i = index\">\n              <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\n              <div class=\"col-md-offset-1 col-md-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\n              <div class=\"col-md-2 card col-md-offset-1\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\n            </div>\n        </div>\n    </div>\n\n    <button (click)=\"newGame()\" class='btn btn-default'>Start a new game!</button>\n  <!-- </div> -->\n</div>\n\n\n"
 
 /***/ }),
 
@@ -130,9 +136,21 @@ var AppComponent = (function () {
             this.blueTeamScore++;
         }
         this.deck.cards[cardIdx].isExposed = true;
-        console.log("this is the card i am trying to update from the component", cardIdx);
-        this._apiService.updateDeck(cardIdx)
+        console.log("this is the card i am trying to update from the component", this.deck.cards[cardIdx]);
+        this._apiService.updateDeck(this.deck.cards[cardIdx].cardId)
             .then(function (response) { console.log('response: ', response); })
+            .catch(function (err) { console.log(err); });
+    };
+    AppComponent.prototype.newGame = function () {
+        var _this = this;
+        console.log("clicked the new game button");
+        this._apiService.makeNewGame()
+            .then(function (response) {
+            console.log(response);
+            _this._apiService.getDeck()
+                .then(function (deck) { _this.deck = deck; console.log('got deck', _this.deck); })
+                .catch(function (err) { console.log(err); });
+        })
             .catch(function (err) { console.log(err); });
     };
     return AppComponent;

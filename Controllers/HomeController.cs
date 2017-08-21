@@ -4,14 +4,17 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Http;
 using dojonames.Models;
+using System.Linq;
 
 namespace dojonames.Controllers
 {
     public class HomeController : Controller
     {
         public Deck ourDeck;
-        public HomeController()
+        private DeckContext _context;
+        public HomeController(DeckContext context)
         {
+            _context = context;
             ourDeck = createDeck();
         }
         public Deck createDeck()
@@ -34,20 +37,63 @@ namespace dojonames.Controllers
         [Route("api/get_deck")]
         public JsonResult GetDeck()
         {
+
+            List<Game> allGames = _context.games.OrderByDescending(game => game.GameId).ToList();
+            Game ourGame = allGames[0];
+            //change this to session ^
+            List<Card> cards = _context.cards.Where(card => card.GameId == ourGame.GameId).ToList();
+            ourDeck.Cards = cards;
+
             return Json(ourDeck);
         }
 
         [HttpGet]
-        [Route("api/update_deck/{cardIdx}")]
-        public void UpdateDeck(int cardIdx)
+        [Route("api/update_deck/{cardId}")]
+        public void UpdateDeck(int cardId)
         {
-            System.Console.WriteLine(cardIdx);
-            System.Console.WriteLine(ourDeck.Cards[cardIdx].Text);
-            System.Console.WriteLine(ourDeck.Cards[cardIdx].Color);
-            ourDeck.Cards[cardIdx].IsExposed = true;
+            System.Console.WriteLine(cardId);
+            Card thisCard = _context.cards.SingleOrDefault(card => card.CardId == cardId);
+            thisCard.IsExposed = true;
+            
+            _context.SaveChanges();
+            // System.Console.WriteLine(ourDeck.Cards[cardIdx].Text);
+            // System.Console.WriteLine(ourDeck.Cards[cardIdx].CardId);
+            // System.Console.WriteLine(ourDeck.Cards[cardIdx].Color);
+            // ourDeck.Cards[cardIdx].IsExposed = true;
             //socket code to send over truthiness of exposed
-            ;
+            
             
         }
+
+        [HttpGet]
+        [Route("api/create_game_in_database")]
+        public JsonResult CreateGameInDatabase()
+        {
+            Game newGame = new Game{
+                RedScore = 0,
+                BlueScore = 0,
+                Turn = "red",
+                Phase ="hint",
+                CreatedAt = DateTime.Now,
+                UpdatedAt = DateTime.Now,
+            };
+            _context.games.Add(newGame);
+            _context.SaveChanges();
+            List<Game> allGames = _context.games.OrderByDescending(game => game.GameId).ToList();
+            Game ourGame = allGames[0];
+            foreach (var card in ourDeck.Cards)
+            {
+                card.GameId = ourGame.GameId;
+                _context.cards.Add(card);
+                _context.SaveChanges();
+            }
+            System.Console.WriteLine("Here from the service");
+            return Json(true);
+        // return RedirectToAction("Index");
+
+
+        }
+        
+
     }
 }

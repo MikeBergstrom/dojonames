@@ -7,6 +7,15 @@ namespace dojonames.Models
 {
     public class Game
     {
+        public int GameId {get;set;}
+        public int RedScore {get;set;}
+        public int BlueScore {get;set;}
+        public string Turn {get;set;}
+        public string Phase {get;set;}
+        public string LastHint {get;set;}
+        public int HintCount {get;set;}
+        public DateTime CreatedAt {get;set;}
+        public DateTime UpdatedAt {get;set;}
         //computer one joins and is assigned to be codemaster
 
         //computer two joins and is assigned to be field agent

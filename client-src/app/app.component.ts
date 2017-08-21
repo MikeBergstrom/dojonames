@@ -34,9 +34,21 @@ export class AppComponent {
         this.blueTeamScore++;
       }
     this.deck.cards[cardIdx].isExposed = true;
-    console.log("this is the card i am trying to update from the component", cardIdx)
-    this._apiService.updateDeck(cardIdx)
+    console.log("this is the card i am trying to update from the component", this.deck.cards[cardIdx])
+    this._apiService.updateDeck(this.deck.cards[cardIdx].cardId)
     .then(response => {console.log('response: ', response)})
     .catch(err => {console.log(err)});
+  }
+
+  newGame(){
+    console.log("clicked the new game button")
+    this._apiService.makeNewGame()
+    .then(response => {console.log(response)
+      this._apiService.getDeck()
+      .then(deck => {this.deck = deck; console.log('got deck', this.deck)})
+      .catch(err => {console.log(err)});
+    })
+    .catch(err => {console.log(err)});
+
   }
 }

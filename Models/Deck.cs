@@ -47,7 +47,7 @@ namespace dojonames.Models
             }
             for (var j=0;j<25;j++){
                 Card newCard = new Card();
-                newCard.CardId = j;
+                // newCard.CardId = j;
                 newCard.Text = deckWords[j];
                 newCard.Color = Colors[j];
                 newCard.IsExposed = false;
