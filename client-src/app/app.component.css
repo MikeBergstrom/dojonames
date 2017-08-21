@@ -1,11 +1,49 @@
 .card {
-    border: 2px solid green;
-    background: #9393FF;
-    height: 200px;
+    border: 2px solid black;
+    height: 180px;
     padding: 5px;
-    margin: 5px;
+    margin: 15px;
+    background: #B5FFB5;
+    text-align: center;
+    vertical-align: middle;
+    line-height: 180px;   
+    font-size: 2em;
+    text-shadow: -1px 0 black, 0 1px black, 1px 0 black, 0 -1px black;
+    color: snow;
 }
 
+
+.redCard {
+    background: #FE9494;
+}
+
+.blueCard {
+    background: #6666FF;
+}
+
+.whiteCard {
+    background: #FFFEB6;
+}
+
+.blackCard {
+    background: #303030;
+}
 .testClass {
-    height: 500px;
+    background: yellow;
+}
+
+.exposedRed {
+    background: red;
+}
+
+.exposedBlue {
+    background: blue;
+}
+
+.exposedWhite {
+    background: yellow;
+}
+
+.exposedBlack {
+    background: black;
 }
