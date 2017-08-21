@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApiService } from './api.service';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,13 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'app';
+  deck;
+
+  constructor(private _apiService: ApiService) {}
+
+  ngOnInit(){
+    this._apiService.getDeck()
+    .then(deck => {this.deck = deck; console.log('got deck', this.deck)})
+    .catch(err => {console.log(err)})
+  }
 }
