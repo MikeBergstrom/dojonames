@@ -160,6 +160,7 @@ namespace dojonames.Controllers
             Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
             game.LastHint = hint;
             game.HintCount = count;
+            game.Phase = "guessing";
             _context.SaveChanges();
             return Json(true);
 
