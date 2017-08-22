@@ -127,6 +127,7 @@ namespace dojonames.Controllers
         }
         public JsonResult gameUpdate()
         {
+            System.Console.WriteLine("homecontroller game update");
             int GameId = (int)HttpContext.Session.GetInt32("GameId");
             Game game = _context.games.Where(g => g.GameId == GameId).SingleOrDefault();
             return Json(game);

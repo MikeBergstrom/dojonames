@@ -8,7 +8,7 @@ export class ApiService {
   constructor(private _http: Http) { }
 
   getDeck(){
-    console.log("In API service call");
+    console.log("In API service call get deck");
     return this._http.get('/api/get_deck')
     .map(data => data.json())
     .toPromise();
@@ -38,7 +38,17 @@ export class ApiService {
   }
   gameList()
   {
-    console.log("")
+    console.log("gameList")
+    return this._http.get('/api/gameList')
+    .map(data => data.json())
+    .toPromise();
+  }
+  joinGame(GameId)
+  {
+    console.log("join game service")
+    return this._http.post('/api/join', GameId)
+    .map(data => data.json())
+    .toPromise();
   }
 
 }
