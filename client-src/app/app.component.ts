@@ -10,25 +10,25 @@ import { Observable } from "rxjs/Rx";
 export class AppComponent {
   title = 'app';
   GameId;
-  deck;
-  client = "";
+  cards;
+  client = "waiting";
   turn = "";
   phase = "";
   redTeamScore = 0;
   blueTeamScore = 0;
   LastHint = "";
   HintCount;
-  games;
+  games = [45,21,12];
 
   constructor(private _apiService: ApiService) {}
 
   ngOnInit(){
     this._apiService.getDeck()
-    .then(deck => {this.deck = deck; console.log('got deck', this.deck)})
+    .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
     .catch(err => {console.log(err)});
-    this._apiService.gameList()
-    .then(games => {this.games = games; console.log('got game list', games)})
-    .catch(err => {console.log(err)});
+    // this._apiService.gameList()
+    // .then(games => {this.games = games; console.log('got game list', games)})
+    // .catch(err => {console.log(err)});
   }
 
   clickCard(cardIdx){
@@ -51,17 +51,17 @@ export class AppComponent {
     this._apiService.makeNewGame()
     .then(response => {console.log(response)
       this._apiService.getDeck()
-      .then(deck => {this.deck = deck; this.client="codeMaster"; this.intervalCall(); console.log('got deck', this.deck)})
+      .then(cards => {this.cards = cards; this.client="codeMaster"; console.log('got deck', this.cards)})
       .catch(err => {console.log(err)});
     })
     .catch(err => {console.log(err)});
   }
   updateGame(){
     this._apiService.getGame()
-    .then(game => {this.turn = game.Turn; this.redTeamScore = game.RedScore; this.blueTeamScore= game.BlueScore; this.phase = game.Phase; this.LastHint = game.LastHint; this.HintCount = game.HintCount; this.GameId = game.GameId; console.log('got deck', this.deck)})
+    .then(game => {this.turn = game.Turn; this.redTeamScore = game.RedScore; this.blueTeamScore= game.BlueScore; this.phase = game.Phase; this.LastHint = game.LastHint; this.HintCount = game.HintCount; this.GameId = game.GameId; console.log('got game')})
     .catch(err => {console.log(err)});
     this._apiService.getDeck()
-    .then(deck => {this.deck = deck; console.log('got deck', this.deck)})
+    .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
     .catch(err => {console.log(err)});
   }
   intervalCall(){
@@ -70,5 +70,10 @@ export class AppComponent {
         this.updateGame();
     })
   }
+  }
+  joinGame(GameId){
+    this._apiService.joinGame(GameId)
+    .then(() => {this.intervalCall()})
+    .catch(err => {console.log(err)})
   }
 }
