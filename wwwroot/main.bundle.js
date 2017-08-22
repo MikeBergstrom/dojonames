@@ -75,6 +75,18 @@ var ApiService = (function () {
             .map(function (data) { return data.json(); })
             .toPromise();
     };
+    ApiService.prototype.submitHint = function (hint, count) {
+        console.log("submit hint api service", hint, count);
+        return this._http.get("/api/hint/" + hint + "/" + count)
+            .map(function (data) { return data.json(); })
+            .toPromise();
+    };
+    ApiService.prototype.endTurn = function () {
+        console.log("end turn service");
+        return this._http.get('/api/endTurn')
+            .map(function (data) { return data.json(); })
+            .toPromise();
+    };
     return ApiService;
 }());
 ApiService = __decorate([
@@ -108,7 +120,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n\r\n<div class='container'>\r\n\r\n  <!-- <div class='col-md-12'> -->\r\n    <h3>Red Team: {{redTeamScore}}</h3>\r\n    <h3>Blue Team: {{blueTeamScore}}</h3>\r\n    <div *ngIf=\"phase == 'waiting'\">\r\n      <h3>Waiting for game to start</h3>\r\n    </div>\r\n    <div *ngIf=\"phase == 'hinting' && client == 'codeMaster'\">\r\n      <h3>Enter a hint and number of cards</h3>\r\n      <form (submit)=\"submitHint()\">\r\n        <label>Hint: </label>\r\n        <input type=\"text\" name=\"LastHint\" [(ngModel)]=\"LastHint\">\r\n        <label># of cards: </label>\r\n        <input type=\"text\" name=\"HintCount\" [(ngModel)]=\"HintCount\">\r\n      </form>\r\n    </div>\r\n    <div *ngIf=\"client == 'codeMaster'\">\r\n      <div class=\"row\">\r\n          <div *ngFor=\"let card of cards; let i = index\">\r\n            <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n          </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div *ngIf=\"client == 'gamePlayer'\">\r\n        <div class=\"row\">\r\n            <div *ngFor=\"let card of cards; let i = index\">\r\n              <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n              <div class=\"col-md-offset-1 col-md-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\r\n              <div class=\"col-md-2 card col-md-offset-1\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <button *ngIf=\"client =='waiting'\" (click)=\"newGame()\" class='btn btn-default'>Start a new game!</button>\r\n    <div *ngIf=\"client == 'waiting'\">\r\n      <h1>Join Game</h1>\r\n      <ul>\r\n        <li *ngFor=\"let game of games\">\r\n          <button (click) = \"joinGame(game)\">{{game}}</button>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  <!-- </div> -->\r\n</div>\r\n\r\n\r\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n\r\n<div class='container'>\r\n\r\n  <!-- <div class='col-md-12'> -->\r\n    <h3>Red Team: {{redTeamScore}}</h3>\r\n    <h3>Blue Team: {{blueTeamScore}}</h3>\r\n    <div *ngIf=\"phase!='waiting'\">\r\n      <h3>{{turn}} team's turn</h3>\r\n    </div>\r\n    <div *ngIf=\"phase == 'waiting'\">\r\n      <h3>Waiting for game to start</h3>\r\n    </div>\r\n    <div *ngIf=\"phase == 'hinting' && client== 'guessing'\">\r\n      <h3>Waiting for Hint...</h3>\r\n    </div>\r\n    <div *ngIf=\"phase == 'hinting' && client == 'hinting'\">\r\n      <h3>Enter a hint and number of cards</h3>\r\n      <form (submit)=\"submitHint()\">\r\n        <label>Hint: </label>\r\n        <input type=\"text\" name=\"hint\" [(ngModel)]=\"hint\">\r\n        <label># of cards: </label>\r\n        <input type=\"text\" name=\"count\" [(ngModel)]=\"count\">\r\n        <input type=\"submit\" value=\"Submit Hint\">\r\n      </form>\r\n    </div>\r\n    <div *ngIf=\"phase == 'guessing' && client=='guessing'\">\r\n      <h3>Hint: {{LastHint}}</h3>\r\n      <h3># of Cards : {{HintCount}}</h3>\r\n      <button (click)=\"endTurn()\">End Turn</button>\r\n    </div>\r\n    <div *ngIf=\"client == 'hinting'\">\r\n      <div class=\"row\">\r\n          <div *ngFor=\"let card of cards; let i = index\">\r\n            <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 == 0\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 != 0\"[ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n          </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div *ngIf=\"client == 'guessing'\">\r\n        <div class=\"row\">\r\n            <div *ngFor=\"let card of cards; let i = index\">\r\n              <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n              <div class=\"col-md-offset-1 col-md-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n              <div class=\"col-md-2 card col-md-offset-1\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <button *ngIf=\"client =='waiting'\" (click)=\"newGame()\" class='btn btn-default'>Start a new game!</button>\r\n    <div *ngIf=\"client == 'waiting'\">\r\n      <h1>Join Game</h1>\r\n      <ul>\r\n        <li *ngFor=\"let game of games\">\r\n          <button (click) = \"joinGame(game.gameId)\">{{game.gameId}}</button>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  <!-- </div> -->\r\n</div>\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -143,28 +155,30 @@ var AppComponent = (function () {
         this.redTeamScore = 0;
         this.blueTeamScore = 0;
         this.LastHint = "";
+        this.hint = "";
+        this.count = 0;
     }
     AppComponent.prototype.ngOnInit = function () {
+        var _this = this;
         // this._apiService.getDeck()
         // .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
         // .catch(err => {console.log(err)});
-        //   this._apiService.gameList()
-        //   .then(games => {this.games = games; console.log('got game list', games)})
-        //   .catch(err => {console.log(err)});
+        this._apiService.gameList()
+            .then(function (games) { _this.games = games; console.log('got game list', games); })
+            .catch(function (err) { console.log(err); });
+        this.intervalCall();
     };
     AppComponent.prototype.clickCard = function (cardIdx) {
+        var _this = this;
         console.log(this.cards[cardIdx]); //update the local copy
-        if (this.cards[cardIdx].color == "red" && !this.cards[cardIdx].isExposed) {
+        if (!this.cards[cardIdx].isExposed && this.phase == "guessing") {
             this.redTeamScore++;
+            this.cards[cardIdx].isExposed = true;
+            console.log("this is the card i am trying to update from the component", this.cards[cardIdx]);
+            this._apiService.updateDeck(this.cards[cardIdx].cardId)
+                .then(function (response) { console.log('response: ', response); _this.updateGame(); })
+                .catch(function (err) { console.log(err); });
         }
-        else if (this.cards[cardIdx].color == "blue" && !this.cards[cardIdx].isExposed) {
-            this.blueTeamScore++;
-        }
-        this.cards[cardIdx].isExposed = true;
-        console.log("this is the card i am trying to update from the component", this.cards[cardIdx]);
-        this._apiService.updateDeck(this.cards[cardIdx].cardId)
-            .then(function (response) { console.log('response: ', response); })
-            .catch(function (err) { console.log(err); });
     };
     AppComponent.prototype.newGame = function () {
         var _this = this;
@@ -172,16 +186,18 @@ var AppComponent = (function () {
         this._apiService.makeNewGame()
             .then(function (response) {
             console.log(response);
-            _this._apiService.getDeck()
-                .then(function (cards) { _this.cards = cards; _this.client = "codeMaster"; console.log('got deck', _this.cards); })
-                .catch(function (err) { console.log(err); });
+            _this.updateGame();
+            _this.client = "hinting";
+            // this._apiService.getDeck()
+            // .then(cards => {this.cards = cards; this.client="codeMaster"; console.log('got deck', this.cards)})
+            // .catch(err => {console.log(err)});
         })
             .catch(function (err) { console.log(err); });
     };
     AppComponent.prototype.updateGame = function () {
         var _this = this;
         this._apiService.getGame()
-            .then(function (game) { _this.turn = game.Turn; _this.redTeamScore = game.RedScore; _this.blueTeamScore = game.BlueScore; _this.phase = game.Phase; _this.LastHint = game.LastHint; _this.HintCount = game.HintCount; _this.GameId = game.GameId; console.log('got game'); })
+            .then(function (game) { _this.turn = game.turn; _this.redTeamScore = game.redScore; _this.blueTeamScore = game.blueScore; _this.phase = game.phase; _this.LastHint = game.lastHint; _this.HintCount = game.hintCount; _this.GameId = game.gameId; console.log('got game', game); })
             .catch(function (err) { console.log(err); });
         this._apiService.getDeck()
             .then(function (cards) { _this.cards = cards; console.log('got deck', _this.cards); })
@@ -189,17 +205,25 @@ var AppComponent = (function () {
     };
     AppComponent.prototype.intervalCall = function () {
         var _this = this;
-        while (this.phase != this.client) {
-            __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].interval(15000).subscribe(function (x) {
-                _this.updateGame();
-            });
-        }
+        __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].interval(1000).subscribe(function (x) {
+            _this.updateGame();
+        });
     };
     AppComponent.prototype.joinGame = function (GameId) {
         var _this = this;
         this._apiService.joinGame(GameId)
-            .then(function () { _this.intervalCall(); })
+            .then(function () { _this.client = "guessing"; _this.updateGame(); })
             .catch(function (err) { console.log(err); });
+    };
+    AppComponent.prototype.submitHint = function () {
+        this._apiService.submitHint(this.hint, this.count);
+        this.updateGame();
+        this.hint = "";
+        this.count = 0;
+    };
+    AppComponent.prototype.endTurn = function () {
+        this._apiService.endTurn();
+        this.updateGame();
     };
     return AppComponent;
 }());

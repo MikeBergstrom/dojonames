@@ -5,34 +5,46 @@
   <!-- <div class='col-md-12'> -->
     <h3>Red Team: {{redTeamScore}}</h3>
     <h3>Blue Team: {{blueTeamScore}}</h3>
+    <div *ngIf="phase!='waiting'">
+      <h3>{{turn}} team's turn</h3>
+    </div>
     <div *ngIf="phase == 'waiting'">
       <h3>Waiting for game to start</h3>
     </div>
-    <div *ngIf="phase == 'hinting' && client == 'codeMaster'">
+    <div *ngIf="phase == 'hinting' && client== 'guessing'">
+      <h3>Waiting for Hint...</h3>
+    </div>
+    <div *ngIf="phase == 'hinting' && client == 'hinting'">
       <h3>Enter a hint and number of cards</h3>
       <form (submit)="submitHint()">
         <label>Hint: </label>
-        <input type="text" name="LastHint" [(ngModel)]="LastHint">
+        <input type="text" name="hint" [(ngModel)]="hint">
         <label># of cards: </label>
-        <input type="text" name="HintCount" [(ngModel)]="HintCount">
+        <input type="text" name="count" [(ngModel)]="count">
+        <input type="submit" value="Submit Hint">
       </form>
     </div>
-    <div *ngIf="client == 'codeMaster'">
+    <div *ngIf="phase == 'guessing' && client=='guessing'">
+      <h3>Hint: {{LastHint}}</h3>
+      <h3># of Cards : {{HintCount}}</h3>
+      <button (click)="endTurn()">End Turn</button>
+    </div>
+    <div *ngIf="client == 'hinting'">
       <div class="row">
           <div *ngFor="let card of cards; let i = index">
             <div class="clearfix" *ngIf="i % 5 == 0"></div>
-            <div class="col-sm-2 card" *ngIf="i % 5 == 0" (click)="clickCard(i)" [ngClass]="{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
-            <div class="col-sm-2 card" *ngIf="i % 5 != 0" (click)="clickCard(i)" [ngClass]="{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
+            <div class="col-sm-2 card" *ngIf="i % 5 == 0" [ngClass]="{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
+            <div class="col-sm-2 card" *ngIf="i % 5 != 0"[ngClass]="{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
           </div>
       </div>
     </div>
 
-    <div *ngIf="client == 'gamePlayer'">
+    <div *ngIf="client == 'guessing'">
         <div class="row">
             <div *ngFor="let card of cards; let i = index">
               <div class="clearfix" *ngIf="i % 5 == 0"></div>
-              <div class="col-md-offset-1 col-md-2 card" *ngIf="i % 5 == 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}} {{card.cardId}}</div>
-              <div class="col-md-2 card col-md-offset-1" *ngIf="i % 5 != 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}} {{card.cardId}}</div>
+              <div class="col-md-offset-1 col-md-2 card" *ngIf="i % 5 == 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
+              <div class="col-md-2 card col-md-offset-1" *ngIf="i % 5 != 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
             </div>
         </div>
     </div>
@@ -42,7 +54,7 @@
       <h1>Join Game</h1>
       <ul>
         <li *ngFor="let game of games">
-          <button (click) = "joinGame(game)">{{game}}</button>
+          <button (click) = "joinGame(game.gameId)">{{game.gameId}}</button>
         </li>
       </ul>
     </div>

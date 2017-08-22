@@ -50,5 +50,19 @@ export class ApiService {
     .map(data => data.json())
     .toPromise();
   }
+  submitHint(hint, count)
+  {
+    console.log("submit hint api service", hint, count)
+    return this._http.get(`/api/hint/${hint}/${count}`)
+    .map(data => data.json())
+    .toPromise();
+  }
+  endTurn()
+  {
+    console.log("end turn service")
+    return this._http.get('/api/endTurn')
+    .map(data => data.json())
+    .toPromise();
+  }
 
 }

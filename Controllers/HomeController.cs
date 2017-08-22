@@ -77,6 +77,7 @@ namespace dojonames.Controllers
             else { //card is white
                 //end the turn and switch the teams
                 game.Turn = game.Turn == "red" ? "blue" :"red";
+                game.Phase = "hinting";
             }
             _context.SaveChanges();
             return Json(true);
@@ -165,6 +166,17 @@ namespace dojonames.Controllers
             return Json(true);
 
 
+        }
+        [HttpGet]
+        [Route("api/endTurn")]
+        public JsonResult endTurn()
+        {
+            int? GameId = HttpContext.Session.GetInt32("GameId");
+            Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
+            game.Turn = game.Turn == "red" ? "blue" :"red";
+            game.Phase = "hinting";
+            _context.SaveChanges();
+            return Json(true);
         }
         
 
