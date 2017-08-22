@@ -29,5 +29,16 @@ export class ApiService {
     .map(data => data.json())
     .toPromise();
   }
+  getGame()
+  {
+    console.log("update game in service")
+    return this._http.get('/api/gameUpdate')
+    .map(data => data.json())
+    .toPromise();
+  }
+  gameList()
+  {
+    console.log("")
+  }
 
 }

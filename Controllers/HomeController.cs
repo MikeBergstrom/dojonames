@@ -81,6 +81,7 @@ namespace dojonames.Controllers
             _context.SaveChanges();
             List<Game> allGames = _context.games.OrderByDescending(game => game.GameId).ToList();
             Game ourGame = allGames[0];
+            HttpContext.Session.SetInt32("GameId", ourGame.GameId);
             foreach (var card in ourDeck.Cards)
             {
                 card.GameId = ourGame.GameId;
@@ -90,8 +91,12 @@ namespace dojonames.Controllers
             System.Console.WriteLine("Here from the service");
             return Json(true);
         // return RedirectToAction("Index");
-
-
+        }
+        public JsonResult gameUpdate()
+        {
+            int GameId = (int)HttpContext.Session.GetInt32("GameId");
+            Game game = _context.games.Where(g => g.GameId == GameId).SingleOrDefault();
+            return Json(game);
         }
         
 
