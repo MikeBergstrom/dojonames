@@ -24,11 +24,7 @@ export class AppComponent {
 
   ngOnInit(){
     this._apiService.getDeck()
-<<<<<<< HEAD
-    .then(deck => {this.deck = deck; console.log('got deck', this.deck)})
-=======
     .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
->>>>>>> 75171a90629b74500f210fd1188b54be0ebefecd
     .catch(err => {console.log(err)});
     // this._apiService.gameList()
     // .then(games => {this.games = games; console.log('got game list', games)})
@@ -36,16 +32,16 @@ export class AppComponent {
   }
 
   clickCard(cardIdx){
-    console.log(this.deck.cards[cardIdx]);//update the local copy
-    if (this.deck.cards[cardIdx].color == "red" && !this.deck.cards[cardIdx].isExposed){
+    console.log(this.cards[cardIdx]);//update the local copy
+    if (this.cards[cardIdx].color == "red" && !this.cards[cardIdx].isExposed){
         this.redTeamScore++;
       }
-    else if (this.deck.cards[cardIdx].color == "blue" && !this.deck.cards[cardIdx].isExposed){
+    else if (this.cards[cardIdx].color == "blue" && !this.cards[cardIdx].isExposed){
         this.blueTeamScore++;
       }
-    this.deck.cards[cardIdx].isExposed = true;
-    console.log("this is the card i am trying to update from the component", this.deck.cards[cardIdx])
-    this._apiService.updateDeck(this.deck.cards[cardIdx].cardId)
+    this.cards[cardIdx].isExposed = true;
+    console.log("this is the card i am trying to update from the component", this.cards[cardIdx])
+    this._apiService.updateDeck(this.cards[cardIdx].cardId)
     .then(response => {console.log('response: ', response)})
     .catch(err => {console.log(err)});
   }

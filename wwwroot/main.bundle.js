@@ -69,6 +69,12 @@ var ApiService = (function () {
             .map(function (data) { return data.json(); })
             .toPromise();
     };
+    ApiService.prototype.joinGame = function (GameId) {
+        console.log("join game service", GameId);
+        return this._http.post('/api/join', GameId)
+            .map(function (data) { return data.json(); })
+            .toPromise();
+    };
     return ApiService;
 }());
 ApiService = __decorate([
@@ -102,7 +108,7 @@ module.exports = module.exports.toString();
 /***/ "../../../../../client-src/app/app.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n\r\n<div class='container'>\r\n\r\n  <!-- <div class='col-md-12'> -->\r\n    <h3>Red Team: {{redTeamScore}}</h3>\r\n    <h3>Blue Team: {{blueTeamScore}}</h3>\r\n    <div *ngIf=\"client == 'codeMaster'\">\r\n      <div class=\"row\">\r\n          <div *ngFor=\"let card of deck.cards; let i = index\">\r\n            <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n          </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div *ngIf=\"client == 'gamePlayer'\">\r\n        <div class=\"row\">\r\n            <div *ngFor=\"let card of deck.cards; let i = index\">\r\n              <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n              <div class=\"col-md-offset-1 col-md-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\r\n              <div class=\"col-md-2 card col-md-offset-1\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <button *ngIf=\"client =='waiting'\" (click)=\"newGame()\" class='btn btn-default'>Start a new game!</button>\r\n    <div *ngIf=\"client == 'waiting'\">\r\n      <h1>Join Game</h1>\r\n      <ul>\r\n        <li *ngFor=\"let game of games\">\r\n          <button (click) = \"joinGame(game)\">{{game}}</button>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  <!-- </div> -->\r\n</div>\r\n\r\n\r\n"
+module.exports = "<!--The content below is only a placeholder and can be replaced.-->\r\n\r\n<div class='container'>\r\n\r\n  <!-- <div class='col-md-12'> -->\r\n    <h3>Red Team: {{redTeamScore}}</h3>\r\n    <h3>Blue Team: {{blueTeamScore}}</h3>\r\n    <div *ngIf=\"client == 'codeMaster'\">\r\n      <div class=\"row\">\r\n          <div *ngFor=\"let card of cards; let i = index\">\r\n            <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n            <div class=\"col-sm-2 card\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}}</div>\r\n          </div>\r\n      </div>\r\n    </div>\r\n\r\n    <div *ngIf=\"client == 'gamePlayer'\">\r\n        <div class=\"row\">\r\n            <div *ngFor=\"let card of cards; let i = index\">\r\n              <div class=\"clearfix\" *ngIf=\"i % 5 == 0\"></div>\r\n              <div class=\"col-md-offset-1 col-md-2 card\" *ngIf=\"i % 5 == 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\r\n              <div class=\"col-md-2 card col-md-offset-1\" *ngIf=\"i % 5 != 0\" (click)=\"clickCard(i)\" [ngClass]=\"{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}\">{{card.text}} {{card.cardId}}</div>\r\n            </div>\r\n        </div>\r\n    </div>\r\n\r\n    <button *ngIf=\"client =='waiting'\" (click)=\"newGame()\" class='btn btn-default'>Start a new game!</button>\r\n    <div *ngIf=\"client == 'waiting'\">\r\n      <h1>Join Game</h1>\r\n      <ul>\r\n        <li *ngFor=\"let game of games\">\r\n          <button (click) = \"joinGame(game)\">{{game}}</button>\r\n        </li>\r\n      </ul>\r\n    </div>\r\n  <!-- </div> -->\r\n</div>\r\n\r\n\r\n"
 
 /***/ }),
 
@@ -113,6 +119,8 @@ module.exports = "<!--The content below is only a placeholder and can be replace
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return AppComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("../../../core/@angular/core.es5.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__api_service__ = __webpack_require__("../../../../../client-src/app/api.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__ = __webpack_require__("../../../../rxjs/Rx.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__);
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -122,6 +130,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+
 
 
 var AppComponent = (function () {
@@ -139,23 +148,23 @@ var AppComponent = (function () {
     AppComponent.prototype.ngOnInit = function () {
         var _this = this;
         this._apiService.getDeck()
-            .then(function (deck) { _this.deck = deck; console.log('got deck', _this.deck); })
+            .then(function (cards) { _this.cards = cards; console.log('got deck', _this.cards); })
             .catch(function (err) { console.log(err); });
         // this._apiService.gameList()
         // .then(games => {this.games = games; console.log('got game list', games)})
         // .catch(err => {console.log(err)});
     };
     AppComponent.prototype.clickCard = function (cardIdx) {
-        console.log(this.deck.cards[cardIdx]); //update the local copy
-        if (this.deck.cards[cardIdx].color == "red" && !this.deck.cards[cardIdx].isExposed) {
+        console.log(this.cards[cardIdx]); //update the local copy
+        if (this.cards[cardIdx].color == "red" && !this.cards[cardIdx].isExposed) {
             this.redTeamScore++;
         }
-        else if (this.deck.cards[cardIdx].color == "blue" && !this.deck.cards[cardIdx].isExposed) {
+        else if (this.cards[cardIdx].color == "blue" && !this.cards[cardIdx].isExposed) {
             this.blueTeamScore++;
         }
-        this.deck.cards[cardIdx].isExposed = true;
-        console.log("this is the card i am trying to update from the component", this.deck.cards[cardIdx]);
-        this._apiService.updateDeck(this.deck.cards[cardIdx].cardId)
+        this.cards[cardIdx].isExposed = true;
+        console.log("this is the card i am trying to update from the component", this.cards[cardIdx]);
+        this._apiService.updateDeck(this.cards[cardIdx].cardId)
             .then(function (response) { console.log('response: ', response); })
             .catch(function (err) { console.log(err); });
     };
@@ -166,7 +175,7 @@ var AppComponent = (function () {
             .then(function (response) {
             console.log(response);
             _this._apiService.getDeck()
-                .then(function (deck) { _this.deck = deck; _this.client = "codeMaster"; console.log('got deck', _this.deck); })
+                .then(function (cards) { _this.cards = cards; _this.client = "codeMaster"; console.log('got deck', _this.cards); })
                 .catch(function (err) { console.log(err); });
         })
             .catch(function (err) { console.log(err); });
@@ -174,10 +183,24 @@ var AppComponent = (function () {
     AppComponent.prototype.updateGame = function () {
         var _this = this;
         this._apiService.getGame()
-            .then(function (game) { _this.turn = game.Turn; _this.redTeamScore = game.RedScore; _this.blueTeamScore = game.BlueScore; _this.phase = game.Phase; _this.LastHint = game.LastHint; _this.HintCount = game.HintCount; _this.GameId = game.GameId; console.log('got deck', _this.deck); })
+            .then(function (game) { _this.turn = game.Turn; _this.redTeamScore = game.RedScore; _this.blueTeamScore = game.BlueScore; _this.phase = game.Phase; _this.LastHint = game.LastHint; _this.HintCount = game.HintCount; _this.GameId = game.GameId; console.log('got game'); })
             .catch(function (err) { console.log(err); });
         this._apiService.getDeck()
-            .then(function (deck) { _this.deck = deck; console.log('got deck', _this.deck); })
+            .then(function (cards) { _this.cards = cards; console.log('got deck', _this.cards); })
+            .catch(function (err) { console.log(err); });
+    };
+    AppComponent.prototype.intervalCall = function () {
+        var _this = this;
+        while (this.phase != this.client) {
+            __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].interval(15000).subscribe(function (x) {
+                _this.updateGame();
+            });
+        }
+    };
+    AppComponent.prototype.joinGame = function (GameId) {
+        var _this = this;
+        this._apiService.joinGame(GameId)
+            .then(function () { _this.intervalCall(); })
             .catch(function (err) { console.log(err); });
     };
     return AppComponent;
