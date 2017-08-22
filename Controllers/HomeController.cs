@@ -125,12 +125,30 @@ namespace dojonames.Controllers
             return Json(true);
         // return RedirectToAction("Index");
         }
-        public JsonResult gameUpdate()
+        public JsonResult GameUpdate()
         {
             System.Console.WriteLine("homecontroller game update");
             int GameId = (int)HttpContext.Session.GetInt32("GameId");
             Game game = _context.games.Where(g => g.GameId == GameId).SingleOrDefault();
             return Json(game);
+        }
+
+        [HttpGet]
+        [Route("api/gameList")]
+        public JsonResult GameList()
+        {    
+            List<Game> games = _context.games.Where(g => g.Phase == "waiting").OrderByDescending(g => g.CreatedAt).ToList();
+            return Json(games);
+        }
+
+        [HttpGet]
+        [Route("api/join/{GameId}")]
+        public IActionResult JoinGame(int GameId)
+        {
+            HttpContext.Session.SetInt32("GameId", GameId);
+            Game joinedGame = _context.games.SingleOrDefault(g => g.GameId == GameId);
+            joinedGame.Phase = "hinting";
+            return RedirectToAction("Index");
         }
         
 
