@@ -5,6 +5,18 @@
   <!-- <div class='col-md-12'> -->
     <h3>Red Team: {{redTeamScore}}</h3>
     <h3>Blue Team: {{blueTeamScore}}</h3>
+    <div *ngIf="phase == 'waiting'">
+      <h3>Waiting for game to start</h3>
+    </div>
+    <div *ngIf="phase == 'hinting' && client == 'codeMaster'">
+      <h3>Enter a hint and number of cards</h3>
+      <form (submit)="submitHint()">
+        <label>Hint: </label>
+        <input type="text" name="LastHint" [(ngModel)]="LastHint">
+        <label># of cards: </label>
+        <input type="text" name="HintCount" [(ngModel)]="HintCount">
+      </form>
+    </div>
     <div *ngIf="client == 'codeMaster'">
       <div class="row">
           <div *ngFor="let card of cards; let i = index">

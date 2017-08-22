@@ -18,7 +18,7 @@ export class AppComponent {
   blueTeamScore = 0;
   LastHint = "";
   HintCount;
-  games = [45,21,12];
+  games;
 
   constructor(private _apiService: ApiService) {}
 
@@ -26,9 +26,9 @@ export class AppComponent {
     // this._apiService.getDeck()
     // .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
     // .catch(err => {console.log(err)});
-    // this._apiService.gameList()
-    // .then(games => {this.games = games; console.log('got game list', games)})
-    // .catch(err => {console.log(err)});
+  //   this._apiService.gameList()
+  //   .then(games => {this.games = games; console.log('got game list', games)})
+  //   .catch(err => {console.log(err)});
   }
 
   clickCard(cardIdx){
