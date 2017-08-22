@@ -37,17 +37,14 @@ namespace dojonames.Controllers
 
         [HttpGet]
         [Route("api/update_deck/{cardId}")]
-        public void UpdateDeck(int cardId)
+        public JsonResult UpdateDeck(int cardId)
         {
             System.Console.WriteLine(cardId);
             Card thisCard = _context.cards.SingleOrDefault(card => card.CardId == cardId);
             thisCard.IsExposed = true;
-            
             _context.SaveChanges();
-
             int GameId = (int)HttpContext.Session.GetInt32("GameId");
             Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
-
             // game.Turn = game.Turn == "red" ? "blue" :"red"; //can we use this? 
             if (thisCard.Color == "red")
             {
@@ -82,6 +79,7 @@ namespace dojonames.Controllers
                 game.Turn = game.Turn == "red" ? "blue" :"red";
             }
             _context.SaveChanges();
+            return Json(true);
 
             //get the game from our session
             //update the gamescore depending on what the card is
