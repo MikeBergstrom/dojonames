@@ -125,6 +125,8 @@ namespace dojonames.Controllers
             return Json(true);
         // return RedirectToAction("Index");
         }
+        [HttpGet]
+        [Route("api/gameUpdate")]
         public JsonResult GameUpdate()
         {
             System.Console.WriteLine("homecontroller game update");
