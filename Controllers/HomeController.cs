@@ -10,21 +10,12 @@ namespace dojonames.Controllers
 {
     public class HomeController : Controller
     {
-        public Deck ourDeck;
+        // public Deck ourDeck;
         private DeckContext _context;
         public HomeController(DeckContext context)
         {
             _context = context;
-            ourDeck = createDeck();
-        }
-        public Deck createDeck()
-        {
-            Random rand = new Random();
-            int randColor = rand.Next(0,2);
-            string firstTeam = randColor == 0 ? "red" : "blue";
-            System.Console.WriteLine(firstTeam);
-            Deck newDeck = new Deck(firstTeam);
-            return newDeck;
+            // ourDeck = createDeck();
         }
         // GET: /Home/
         [HttpGet]
@@ -37,14 +28,11 @@ namespace dojonames.Controllers
         [Route("api/get_deck")]
         public JsonResult GetDeck()
         {
-
-            List<Game> allGames = _context.games.OrderByDescending(game => game.GameId).ToList();
-            Game ourGame = allGames[0];
-            //change this to session ^
-            List<Card> cards = _context.cards.Where(card => card.GameId == ourGame.GameId).ToList();
-            ourDeck.Cards = cards;
-
-            return Json(ourDeck);
+            int GameId = (int)HttpContext.Session.GetInt32("GameId");
+            Game game = _context.games.Where(g => g.GameId == GameId).SingleOrDefault();
+            List<Card> cards = _context.cards.Where(card => card.GameId == game.GameId).ToList();
+            //instead of returning the deck object with the cards and colors, lets just do CARDS
+            return Json(cards);
         }
 
         [HttpGet]
@@ -56,11 +44,49 @@ namespace dojonames.Controllers
             thisCard.IsExposed = true;
             
             _context.SaveChanges();
-            // System.Console.WriteLine(ourDeck.Cards[cardIdx].Text);
-            // System.Console.WriteLine(ourDeck.Cards[cardIdx].CardId);
-            // System.Console.WriteLine(ourDeck.Cards[cardIdx].Color);
-            // ourDeck.Cards[cardIdx].IsExposed = true;
-            //socket code to send over truthiness of exposed
+
+            int GameId = (int)HttpContext.Session.GetInt32("GameId");
+            Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
+
+            // game.Turn = game.Turn == "red" ? "blue" :"red"; //can we use this? 
+            if (thisCard.Color == "red")
+            {
+                game.RedScore += 1;
+                //logic for switching the turn if incorrect team
+                //if the game turn is red and the card clicked is red, they keep going
+                //else, end their turn and switch it
+                if (game.Turn == "blue")
+                {
+                    //if it's blue team's turn and they clicked a red card, switch who's turn it is!
+                    game.Turn = "red";
+                    game.Phase = "hinting";
+                }
+            }
+            else if (thisCard.Color =="blue")
+            {
+                game.BlueScore +=1;
+                if (game.Turn == "red")
+                {
+                    game.Turn = "blue";
+                    game.Phase = "hinting";
+                }
+            }
+
+            else if (thisCard.Color =="black")
+            {
+                game.Phase = "ended";
+                //end the game, whatever team who clicked it loses
+            }
+            else { //card is white
+                //end the turn and switch the teams
+                game.Turn = game.Turn == "red" ? "blue" :"red";
+            }
+            _context.SaveChanges();
+
+            //get the game from our session
+            //update the gamescore depending on what the card is
+
+            //probably send the new game state and card state back to EVERYONE? how?
             
             
         }
@@ -69,11 +95,17 @@ namespace dojonames.Controllers
         [Route("api/create_game_in_database")]
         public JsonResult CreateGameInDatabase()
         {
+            //create deck code
+            Random rand = new Random();
+            int randColor = rand.Next(0,2);
+            string firstTeam = randColor == 0 ? "red" : "blue";
+            Deck newDeck = new Deck(firstTeam);
+            //create game code
             Game newGame = new Game{
                 RedScore = 0,
                 BlueScore = 0,
-                Turn = "red",
-                Phase ="hint",
+                Turn = firstTeam,
+                Phase ="waiting",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
             };
@@ -82,7 +114,8 @@ namespace dojonames.Controllers
             List<Game> allGames = _context.games.OrderByDescending(game => game.GameId).ToList();
             Game ourGame = allGames[0];
             HttpContext.Session.SetInt32("GameId", ourGame.GameId);
-            foreach (var card in ourDeck.Cards)
+            
+            foreach (var card in newDeck.Cards)
             {
                 card.GameId = ourGame.GameId;
                 _context.cards.Add(card);

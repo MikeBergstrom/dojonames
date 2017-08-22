@@ -26,9 +26,9 @@ export class AppComponent {
     this._apiService.getDeck()
     .then(deck => {this.deck = deck; console.log('got deck', this.deck)})
     .catch(err => {console.log(err)});
-    this._apiService.gameList()
-    .then(games => {this.games = games; console.log('got game list', games)})
-    .catch(err => {console.log(err)});
+    // this._apiService.gameList()
+    // .then(games => {this.games = games; console.log('got game list', games)})
+    // .catch(err => {console.log(err)});
   }
 
   clickCard(cardIdx){
