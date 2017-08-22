@@ -151,6 +151,20 @@ namespace dojonames.Controllers
             _context.SaveChanges();
             return Json(true);
         }
+
+        [HttpGet]
+        [Route("api/hint/{hint}/{count}")]
+        public JsonResult SetHint(string hint, int count)
+        {
+            int? GameId = HttpContext.Session.GetInt32("GameId");
+            Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
+            game.LastHint = hint;
+            game.HintCount = count;
+            _context.SaveChanges();
+            return Json(true);
+
+
+        }
         
 
     }
