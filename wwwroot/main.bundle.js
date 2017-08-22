@@ -71,7 +71,7 @@ var ApiService = (function () {
     };
     ApiService.prototype.joinGame = function (GameId) {
         console.log("join game service", GameId);
-        return this._http.post('/api/join', GameId)
+        return this._http.get("/api/join/" + GameId)
             .map(function (data) { return data.json(); })
             .toPromise();
     };
