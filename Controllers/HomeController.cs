@@ -148,6 +148,7 @@ namespace dojonames.Controllers
             HttpContext.Session.SetInt32("GameId", GameId);
             Game joinedGame = _context.games.SingleOrDefault(g => g.GameId == GameId);
             joinedGame.Phase = "hinting";
+            _context.SaveChanges();
             return Json(true);
         }
         
