@@ -8,12 +8,15 @@
     <div *ngIf="phase!='waiting'">
       <h3>{{turn}} team's turn</h3>
     </div>
+    
     <div *ngIf="phase == 'waiting'">
       <h3>Waiting for game to start</h3>
     </div>
+
     <div *ngIf="phase == 'hinting' && client== 'guessing'">
       <h3>Waiting for Hint...</h3>
     </div>
+
     <div *ngIf="phase == 'hinting' && client == 'hinting'">
       <h3>Enter a hint and number of cards</h3>
       <form (submit)="submitHint()">
@@ -24,11 +27,21 @@
         <input type="submit" value="Submit Hint">
       </form>
     </div>
+
     <div *ngIf="phase == 'guessing' && client=='guessing'">
       <h3>Hint: {{LastHint}}</h3>
       <h3># of Cards : {{HintCount}}</h3>
       <button (click)="endTurn()">End Turn</button>
     </div>
+
+    <div *ngIf="phase == 'redWin'">
+      <h3>Red Team Wins!</h3>
+    </div>
+
+    <div *ngIf="phase == 'blueWin'">
+      <h3>Blue Team Wins!</h3>
+    </div>
+
     <div *ngIf="client == 'hinting'">
       <div class="row">
           <div *ngFor="let card of cards; let i = index">

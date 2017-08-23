@@ -71,7 +71,11 @@ namespace dojonames.Controllers
 
             else if (thisCard.Color =="black")
             {
-                game.Phase = "ended";
+                if(game.Turn == "red"){
+                    game.Phase = "blueWin";
+                } else {
+                    game.Phase = "redWin";
+                }
                 //end the game, whatever team who clicked it loses
             }
             else { //card is white
@@ -80,6 +84,7 @@ namespace dojonames.Controllers
                 game.Phase = "hinting";
             }
             _context.SaveChanges();
+            checkForWinner();
             return Json(true);
 
             //get the game from our session
@@ -90,6 +95,28 @@ namespace dojonames.Controllers
             
         }
 
+        public void checkForWinner()
+        {
+            int GameId = (int)HttpContext.Session.GetInt32("GameId");
+            Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
+            string firstTeam = HttpContext.Session.GetString("firstTeam");
+            if(firstTeam == "red"){
+                if(game.RedScore == 9){
+                    game.Phase = "redWin";
+                } else if(game.BlueScore == 8){
+                    game.Phase = "blueWin";
+                }
+            }
+            else if(firstTeam == "blue") {
+                if(game.BlueScore == 9){
+                    game.Phase = "blueWin";
+                } else if(game.RedScore == 8){
+                    game.Phase = "redWin";
+                }
+            }
+            _context.SaveChanges();
+        }
+
         [HttpGet]
         [Route("api/create_game_in_database")]
         public JsonResult CreateGameInDatabase()
@@ -98,6 +125,7 @@ namespace dojonames.Controllers
             Random rand = new Random();
             int randColor = rand.Next(0,2);
             string firstTeam = randColor == 0 ? "red" : "blue";
+            HttpContext.Session.SetString("firstTeam", firstTeam);
             Deck newDeck = new Deck(firstTeam);
             //create game code
             Game newGame = new Game{
@@ -149,6 +177,7 @@ namespace dojonames.Controllers
             HttpContext.Session.SetInt32("GameId", GameId);
             Game joinedGame = _context.games.SingleOrDefault(g => g.GameId == GameId);
             joinedGame.Phase = "hinting";
+            HttpContext.Session.SetString("firstTeam", joinedGame.Turn);
             _context.SaveChanges();
             return Json(true);
         }
