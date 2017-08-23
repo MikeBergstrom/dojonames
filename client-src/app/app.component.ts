@@ -43,6 +43,7 @@ export class AppComponent {
         this._apiService.updateDeck(this.cards[cardIdx].cardId)
         .then(response => {console.log('response: ', response); this.updateGame();})
         .catch(err => {console.log(err)});
+        this.intervalCall();
       }
   }
 
@@ -63,11 +64,16 @@ export class AppComponent {
     this._apiService.getDeck()
     .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
     .catch(err => {console.log(err)});
+    if(this.phase == this.client){
+      
+    }
   }
   intervalCall(){
-      Observable.interval(1000).subscribe(x => {
+    {
+      Observable.interval(1000).takeWhile(x => this.phase != this.client || this.phase == "waiting").subscribe(x => {
         this.updateGame();
       })
+    }
   }
   joinGame(GameId){
     this._apiService.joinGame(GameId)
@@ -79,6 +85,7 @@ export class AppComponent {
     this.updateGame();
     this.hint="";
     this.count=0;
+    this.intervalCall();
   }
   endTurn(){
     this._apiService.endTurn();
