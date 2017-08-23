@@ -64,10 +64,8 @@
       </div>
 
       <div *ngIf="phase == 'guessing' && client=='guessing'">
-        <h3>Hint: {{LastHint}}</h3>
-        <h3># of Cards : {{HintCount}}</h3>
-        <button (click)="endTurn()">End Turn</button>
 
+        
         <table class='table hint-table'>
           <tr class='hint-labels'>
             <td>Hint</td>
@@ -78,6 +76,7 @@
             <td>{{HintCount}}</td>
           </tr>
         </table>
+        <button (click)="endTurn()" class='btn btn-default dn-button-hint'>End Turn</button>
       </div>
 
     </div>
@@ -129,6 +128,10 @@
 
     </div>
   <!-- </div> -->
+</div>
+<div class="navbar navbar-fixed-bottom dn-footer">
+  <span class='rules-text footer-text'> 2017 Mike Bergstrom and Michael Hartley</span>
+    
 </div>
 
 

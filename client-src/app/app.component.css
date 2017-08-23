@@ -2,6 +2,10 @@
 font-family: 'Roboto Mono', monospace; */
 body {
     color: white;
+    padding-bottom: 70px;
+}
+.container {
+    padding-bottom: 70px;
 }
 
 .text {
@@ -18,7 +22,7 @@ body {
     border-radius: 0px 0px 12px 12px;
     height: 3em;
     line-height: 3em;
-    vertical-align: center;
+    vertical-align: middle;
     text-align: center;
     margin: 0;
     padding: 0;
@@ -39,6 +43,7 @@ body {
  }
 .card {
     border: 2px solid black;
+    border-radius: 6px;
     height: 90px;
     padding: 5px;
     margin: 10px;
@@ -53,7 +58,7 @@ body {
 }
 
 .card-container {
-    background: #424242;
+    background: #2e2e2e;
 }
 
 /* .redTurn{
@@ -195,4 +200,17 @@ td > .dn-button  {
     padding: 10px;
     font-size: 2em;
 
+}
+
+.dn-footer{
+    background: #2e2e2e;
+    text-align: right;
+    vertical-align: middle; 
+    height: 30px;
+    line-height: 50px;
+    margin-top: -10px;
+}
+
+.footer-text{
+    margin-right: 10px;
 }
