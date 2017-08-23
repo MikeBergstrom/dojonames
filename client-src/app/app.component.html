@@ -1,6 +1,6 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
-<div class='container'>
+<div [ngClass]="{'redTurn': phase != 'waiting' && (turn == 'red' || phase =='redWin'), 'blueTurn': phase !='waiting' && (turn == 'blue' || phase == 'blueWin')}" class='container'>
 
   <!-- <div class='col-md-12'> -->
     <h3>Red Team: {{redTeamScore}}</h3>
@@ -8,7 +8,7 @@
     <div *ngIf="phase!='waiting'">
       <h3>{{turn}} team's turn</h3>
     </div>
-    
+
     <div *ngIf="phase == 'waiting'">
       <h3>Waiting for game to start</h3>
     </div>

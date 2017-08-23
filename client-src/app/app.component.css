@@ -12,7 +12,12 @@
     color: snow;
 }
 
-
+.redTurn{
+    border: 50px solid red;
+}
+.blueTurn{
+    border: 50px solid blue;
+}
 .redCard {
     background: #FE9494;
 }
