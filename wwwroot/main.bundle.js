@@ -178,6 +178,7 @@ var AppComponent = (function () {
             this._apiService.updateDeck(this.cards[cardIdx].cardId)
                 .then(function (response) { console.log('response: ', response); _this.updateGame(); })
                 .catch(function (err) { console.log(err); });
+            this.intervalCall();
         }
     };
     AppComponent.prototype.newGame = function () {
@@ -202,12 +203,16 @@ var AppComponent = (function () {
         this._apiService.getDeck()
             .then(function (cards) { _this.cards = cards; console.log('got deck', _this.cards); })
             .catch(function (err) { console.log(err); });
+        if (this.phase == this.client) {
+        }
     };
     AppComponent.prototype.intervalCall = function () {
         var _this = this;
-        __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].interval(1000).subscribe(function (x) {
-            _this.updateGame();
-        });
+        {
+            __WEBPACK_IMPORTED_MODULE_2_rxjs_Rx__["Observable"].interval(1000).takeWhile(function (x) { return _this.phase != _this.client || _this.phase == "waiting"; }).subscribe(function (x) {
+                _this.updateGame();
+            });
+        }
     };
     AppComponent.prototype.joinGame = function (GameId) {
         var _this = this;
@@ -220,6 +225,7 @@ var AppComponent = (function () {
         this.updateGame();
         this.hint = "";
         this.count = 0;
+        this.intervalCall();
     };
     AppComponent.prototype.endTurn = function () {
         this._apiService.endTurn();
