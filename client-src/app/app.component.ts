@@ -97,4 +97,9 @@ export class AppComponent {
     // this.updateGame();
     setTimeout(this.intervalCall(), 4000);
   }
+  resetGame(){
+    console.log("reset game app component")
+    this._apiService.resetGame();
+    
+  }
 }

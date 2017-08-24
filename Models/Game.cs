@@ -17,6 +17,8 @@ namespace dojonames.Models
         public int HintCount {get;set;}
         public DateTime CreatedAt {get;set;}
         public DateTime UpdatedAt {get;set;}
+
+        public string firstTeam {get;set;}
         //computer one joins and is assigned to be codemaster
 
         //computer two joins and is assigned to be field agent

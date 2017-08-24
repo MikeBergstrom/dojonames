@@ -64,5 +64,12 @@ export class ApiService {
     .map(data => data.json())
     .toPromise();
   }
+  resetGame()
+  {
+    console.log("reset game service")
+    return this._http.get('/api/newGame')
+    .map(data => data.json())
+    .toPromise();
+  }
 
 }

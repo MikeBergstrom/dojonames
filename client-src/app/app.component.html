@@ -45,6 +45,10 @@
       <div *ngIf="phase == 'blueWin'">
         <h3>Blue Team Wins!</h3>
       </div>
+
+      <div *ngIf="(phase == 'blueWin' || phase=='redWin') && client=='hinting'">
+        <button (click)="resetGame()">Start a New Game</button>
+      </div>
     
       <h3 *ngIf="phase!='' && phase!='blueWin' && phase!='redWin'" class='text'><span class="capitalize">{{turn}}</span> team's turn</h3>
       <div *ngIf="phase == 'hinting' && client == 'hinting'">

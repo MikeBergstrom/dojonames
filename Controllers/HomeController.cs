@@ -99,15 +99,14 @@ namespace dojonames.Controllers
         {
             int GameId = (int)HttpContext.Session.GetInt32("GameId");
             Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
-            string firstTeam = HttpContext.Session.GetString("firstTeam");
-            if(firstTeam == "red"){
+            if(game.firstTeam == "red"){
                 if(game.RedScore == 9){
                     game.Phase = "redWin";
                 } else if(game.BlueScore == 8){
                     game.Phase = "blueWin";
                 }
             }
-            else if(firstTeam == "blue") {
+            else if(game.firstTeam == "blue") {
                 if(game.BlueScore == 9){
                     game.Phase = "blueWin";
                 } else if(game.RedScore == 8){
@@ -137,6 +136,7 @@ namespace dojonames.Controllers
                 Phase ="waiting",
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now,
+                firstTeam = firstTeam
             };
             _context.games.Add(newGame);
             _context.SaveChanges();
@@ -209,7 +209,36 @@ namespace dojonames.Controllers
             _context.SaveChanges();
             return Json(true);
         }
-        
+        [HttpGet]
+        [Route("api/newGame")]
+        public JsonResult newGame()
+        {
+            System.Console.WriteLine("newGAME controller *********************************************************************************************************************************************************************************");
+            int? GameId = HttpContext.Session.GetInt32("GameId");
+            Game game = _context.games.SingleOrDefault(g => g.GameId == GameId);
+            List<Card> cards = _context.cards.Where(card => card.GameId == GameId).ToList();
+            foreach(var card in cards){
+            _context.Remove(card);
+            }
+            Random rand = new Random();
+            int randColor = rand.Next(0,2);
+            string firstTeam = randColor == 0 ? "red" : "blue";
+            HttpContext.Session.SetString("firstTeam", firstTeam);
+            Deck newDeck = new Deck(firstTeam);
+            foreach (var card in newDeck.Cards)
+            {
+                card.GameId = game.GameId;
+                _context.cards.Add(card);
+                _context.SaveChanges();
+            }
+            game.firstTeam = firstTeam;
+            game.Phase = "hinting";
+            game.Turn = firstTeam;
+            game.RedScore =0;
+            game.BlueScore = 0;
+            _context.SaveChanges();
+            return Json (true);
+        }
 
     }
 }
