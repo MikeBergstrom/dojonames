@@ -22,10 +22,10 @@ export class ApiService {
     .toPromise();
 
   }
-  makeNewGame()
+  makeNewGame(gameName)
   {
-    console.log("going thru new game service")
-    return this._http.get('/api/create_game_in_database')
+    console.log("going thru new game service", gameName)
+    return this._http.get(`/api/create_game_in_database/${gameName}`)
     .map(data => data.json())
     .toPromise();
   }

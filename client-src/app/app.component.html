@@ -112,13 +112,17 @@
     </div>
     <div class='col-md-12'>
       <div *ngIf="client == 'waiting'">
-          <button *ngIf="client =='waiting'" (click)="newGame()" class='btn btn-default dn-button-start center-block'>Start a new game!</button>
+          <form class="btn btn-default dn-button-start center-block" (submit)="newGame()">
+            <label>Enter Your Name:</label>
+            <input type="text" name="gameName" [(ngModel)]="gameName">
+            <input type="submit" value="Start a New Game">
+          </form>
         <table class='table game-table table-curved'>
           <tr>
             <td align="center" colspan="2" class="table-header">Codenames</td>
           </tr>
           <tr *ngFor="let game of games">
-            <td class='game-row'  width="50%">{{game.gameId}}</td>
+            <td class='game-row'  width="50%">{{game.name}}'s Game</td>
             <td width="50%"><button (click) = "joinGame(game.gameId)" class="btn btn-default dn-button">Join</button></td>
           </tr>
         </table>

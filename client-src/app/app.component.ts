@@ -21,6 +21,7 @@ export class AppComponent {
   count = 0;
   HintCount;
   games;
+  gameName ="";
 
   constructor(private _apiService: ApiService) {}
 
@@ -46,8 +47,8 @@ export class AppComponent {
   }
 
   newGame(){
-    console.log("clicked the new game button")
-    this._apiService.makeNewGame()
+    console.log("clicked the new game button", this.gameName)
+    this._apiService.makeNewGame(this.gameName)
     .then(response => {console.log(response); this.updateGame();this.client="hinting"; this.intervalCall();
       // this._apiService.getDeck()
       // .then(cards => {this.cards = cards; this.client="codeMaster"; console.log('got deck', this.cards)})

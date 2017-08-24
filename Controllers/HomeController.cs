@@ -118,9 +118,10 @@ namespace dojonames.Controllers
         }
 
         [HttpGet]
-        [Route("api/create_game_in_database")]
-        public JsonResult CreateGameInDatabase()
+        [Route("api/create_game_in_database/{name}")]
+        public JsonResult CreateGameInDatabase(string name)
         {
+            System.Console.WriteLine(name + "**************************************************************************");
             //create deck code
             Random rand = new Random();
             int randColor = rand.Next(0,2);
@@ -129,6 +130,7 @@ namespace dojonames.Controllers
             Deck newDeck = new Deck(firstTeam);
             //create game code
             Game newGame = new Game{
+                name = name,
                 RedScore = 0,
                 BlueScore = 0,
                 Turn = firstTeam,

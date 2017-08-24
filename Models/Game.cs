@@ -8,6 +8,7 @@ namespace dojonames.Models
     public class Game
     {
         public int GameId {get;set;}
+        public string name {get;set;}
         public int RedScore {get;set;}
         public int BlueScore {get;set;}
         public string Turn {get;set;}
