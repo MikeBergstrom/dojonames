@@ -1,7 +1,7 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
 <div [ngClass]="{'redTurn': phase != 'waiting' && (turn == 'red' || phase =='redWin'), 'blueTurn': phase !='waiting' && (turn == 'blue' || phase == 'blueWin')}" class='container-fluid'>
-  <div class='row' *ngIf="phase !== ''">
+  <div class='row top-row' *ngIf="phase !== ''">
     <div class='col-md-7'>
       <div class='col-sm-6'>
         <h3 class='text score dojo-score'>Codenames</h3>
@@ -85,7 +85,7 @@
         <div *ngIf="client == 'hinting'">
             <div class="row card-container" [ngClass]="{'card-container-red': turn=='red', 'card-container-blue': turn=='blue'}">
               <div *ngFor="let card of cards; let i = index">
-                <div class="clearfix" *ngIf="i % 5 == 0"></div>
+                <!-- <div class="clearfix" *ngIf="i % 5 == 0"></div> -->
                 <div class="col-sm-2 card" *ngIf="i % 5 == 0" [ngClass]="{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
                 <div class="col-sm-2 card" *ngIf="i % 5 != 0"[ngClass]="{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
               </div>
@@ -95,9 +95,10 @@
         <div *ngIf="client == 'guessing'">
             <div class="row card-container" [ngClass]="{'card-container-red': turn=='red', 'card-container-blue': turn=='blue'}">
                 <div *ngFor="let card of cards; let i = index">
-                  <div class="clearfix" *ngIf="i % 5 == 0"></div>
+                  <!-- <div class="clearfix" *ngIf="i % 5 == 0"></div> -->
                   <div class="col-md-offset-1 col-md-2 card" *ngIf="i % 5 == 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
-                  <div class="col-md-2 card col-md-offset-1" *ngIf="i % 5 != 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
+                  <div class="col-md-2 card" *ngIf="i % 5 != 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
+                  
                 </div>
             </div>
         </div>
