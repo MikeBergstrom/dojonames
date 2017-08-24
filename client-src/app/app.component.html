@@ -46,7 +46,7 @@
         <h3>Blue Team Wins!</h3>
       </div>
     
-      <h3 *ngIf="phase!=''" class='text'><span class="capitalize">{{turn}}</span> team's turn</h3>
+      <h3 *ngIf="phase!='' && phase!='blueWin' && phase!='redWin'" class='text'><span class="capitalize">{{turn}}</span> team's turn</h3>
       <div *ngIf="phase == 'hinting' && client == 'hinting'">
         <h3 class='text'>Hinting Phase</h3>
         <form (submit)="submitHint()">
@@ -60,6 +60,19 @@
           </div>
           <input type="submit" value="Submit Hint" class='btn btn-default dn-button-hint'>
         </form>
+      </div>
+      <div *ngIf="phase =='guessing' && client =='hinting'">
+        <h2>Waiting on your team to guess on your hint...</h2>
+        <table class='table hint-table'>
+        <tr class='hint-labels'>
+            <td>Hint</td>
+            <td>#</td>
+          </tr>
+          <tr class='hint-hints'>
+            <td>{{LastHint}}</td>
+            <td>{{HintCount}}</td>
+          </tr>
+        </table>
       </div>
 
       <div *ngIf="phase == 'guessing' && client=='guessing'">
@@ -108,11 +121,15 @@
     <!-- Homepage-->
     <div class='col-md-12'>
       <div *ngIf="client == 'waiting'">
-          <form class="btn btn-default dn-button-start center-block" (submit)="newGame()">
-            <label>Enter Your Name:</label>
-            <input type="text" name="gameName" [(ngModel)]="gameName">
-            <input type="submit" value="Start a New Game">
+        <div class='col-md-4 col-md-offset-4'>
+          <form (submit)="newGame()" class='new-game-form'#gameForm='ngForm'>
+            <!-- <label class='name-input'>Enter Your Name:</label> -->
+            <div class='form-group'>
+              <input type="text" name="gameName" [(ngModel)]="gameName" class='form-control name-input' required placeholder="Game Name">
+            </div>
+            <button type="submit" class='btn btn-default dn-button-start center-block' [disabled]="!gameForm.form.valid">Start a New Game</button>
           </form>
+        </div>
         <table class='table game-table table-curved'>
           <tr>
             <td align="center" colspan="2" class="table-header">Codenames</td>
