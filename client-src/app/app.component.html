@@ -46,13 +46,7 @@
         <h3>Blue Team Wins!</h3>
       </div>
     
-
-
-      <div *ngIf="phase!='waiting'">
-          <div *ngIf="phase!='waiting'">
-            <h3 class='text'><span class="capitalize">{{turn}}</span> team's turn</h3>
-          </div>
-        </div>
+      <h3 *ngIf="phase!=''" class='text'><span class="capitalize">{{turn}}</span> team's turn</h3>
       <div *ngIf="phase == 'hinting' && client == 'hinting'">
         <h3 class='text'>Hinting Phase</h3>
         <form (submit)="submitHint()">
@@ -87,9 +81,9 @@
     </div>
 
     <div class='col-md-8'>
-      <div class='card-container'>
+      
         <div *ngIf="client == 'hinting'">
-          <div class="row">
+            <div class="row card-container" [ngClass]="{'card-container-red': turn=='red', 'card-container-blue': turn=='blue'}">
               <div *ngFor="let card of cards; let i = index">
                 <div class="clearfix" *ngIf="i % 5 == 0"></div>
                 <div class="col-sm-2 card" *ngIf="i % 5 == 0" [ngClass]="{'redCard': card.color == 'red' && !card.isExposed, 'blueCard': card.color == 'blue' && !card.isExposed, 'whiteCard': card.color == 'white' && !card.isExposed, 'blackCard': card.color == 'black' && !card.isExposed, 'testClass': card.isExposed, 'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
@@ -99,7 +93,7 @@
         </div>
 
         <div *ngIf="client == 'guessing'">
-            <div class="row">
+            <div class="row card-container" [ngClass]="{'card-container-red': turn=='red', 'card-container-blue': turn=='blue'}">
                 <div *ngFor="let card of cards; let i = index">
                   <div class="clearfix" *ngIf="i % 5 == 0"></div>
                   <div class="col-md-offset-1 col-md-2 card" *ngIf="i % 5 == 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
@@ -107,9 +101,10 @@
                 </div>
             </div>
         </div>
-      </div>
+
 
     </div>
+    <!-- Homepage-->
     <div class='col-md-12'>
       <div *ngIf="client == 'waiting'">
           <form class="btn btn-default dn-button-start center-block" (submit)="newGame()">
