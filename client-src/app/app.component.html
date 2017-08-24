@@ -4,11 +4,11 @@
   <div class='row' *ngIf="phase !== ''">
     <div class='col-md-7'>
       <div class='col-sm-6'>
-        <h3 class='text score dojo-score'>DojoNames</h3>
+        <h3 class='text score dojo-score'>Codenames</h3>
       </div>
       <div class='col-sm-6'>
         <p class='rules-text'>
-          Each turn a dojomaster will decide on a hint and the number
+          Each turn a codemaster will decide on a hint and the number
           of cards associate with that hint.</p>
           <p class='rules-text'>Members of the same team will then take guesses based on that hint
             to try and reveal their team's cards.
@@ -115,7 +115,7 @@
           <button *ngIf="client =='waiting'" (click)="newGame()" class='btn btn-default dn-button-start center-block'>Start a new game!</button>
         <table class='table game-table table-curved'>
           <tr>
-            <td align="center" colspan="2" class="table-header">DojoNames</td>
+            <td align="center" colspan="2" class="table-header">Codenames</td>
           </tr>
           <tr *ngFor="let game of games">
             <td class='game-row'  width="50%">{{game.gameId}}</td>
