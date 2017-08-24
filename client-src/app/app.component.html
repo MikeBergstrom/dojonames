@@ -1,6 +1,6 @@
 <!--The content below is only a placeholder and can be replaced.-->
 
-<div [ngClass]="{'redTurn': phase != 'waiting' && (turn == 'red' || phase =='redWin'), 'blueTurn': phase !='waiting' && (turn == 'blue' || phase == 'blueWin')}" class='container-fluid'>
+<div [ngClass]="{'redTurn': phase != 'waiting' && (turn == 'red' || phase =='redWin'), 'blueTurn': phase !='waiting' && (turn == 'blue' || phase == 'blueWin')}" class='container-fluid game-container'>
   <div class='row top-row' *ngIf="phase !== ''">
     <div class='col-md-7'>
       <div class='col-sm-6'>
@@ -9,7 +9,7 @@
       <div class='col-sm-6'>
         <p class='rules-text'>
           Each turn a codemaster will decide on a hint and the number
-          of cards associate with that hint.</p>
+          of cards associated with that hint.</p>
           <p class='rules-text'>Members of the same team will then take guesses based on that hint
             to try and reveal their team's cards.
         </p>
@@ -76,8 +76,7 @@
       </div>
 
       <div *ngIf="phase == 'guessing' && client=='guessing'">
-
-        
+        <h2>Your codemaster has given you this hint...</h2>
         <table class='table hint-table'>
           <tr class='hint-labels'>
             <td>Hint</td>
@@ -109,8 +108,8 @@
             <div class="row card-container" [ngClass]="{'card-container-red': turn=='red', 'card-container-blue': turn=='blue'}">
                 <div *ngFor="let card of cards; let i = index">
                   <!-- <div class="clearfix" *ngIf="i % 5 == 0"></div> -->
-                  <div class="col-md-offset-1 col-md-2 card" *ngIf="i % 5 == 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
-                  <div class="col-md-2 card" *ngIf="i % 5 != 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
+                  <div class="col-md-offset-1 col-sm-2 card" *ngIf="i % 5 == 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
+                  <div class="col-sm-2 card" *ngIf="i % 5 != 0" (click)="clickCard(i)" [ngClass]="{'exposedRed': card.isExposed && card.color == 'red', 'exposedBlue': card.isExposed && card.color == 'blue', 'exposedWhite': card.isExposed && card.color == 'white', 'exposedBlack': card.isExposed && card.color == 'black'}">{{card.text}}</div>
                   
                 </div>
             </div>
