@@ -31,7 +31,6 @@ export class AppComponent {
     this._apiService.gameList()
     .then(games => {this.games = games; console.log('got game list', games)})
     .catch(err => {console.log(err)});
-    this.intervalCall();
   }
 
   clickCard(cardIdx){
@@ -41,16 +40,15 @@ export class AppComponent {
         this.cards[cardIdx].isExposed = true;
         console.log("this is the card i am trying to update from the component", this.cards[cardIdx])
         this._apiService.updateDeck(this.cards[cardIdx].cardId)
-        .then(response => {console.log('response: ', response); this.updateGame();})
+        .then(response => {console.log('response: ', response); this.updateGame(); this.intervalCall();})
         .catch(err => {console.log(err)});
-        this.intervalCall();
       }
   }
 
   newGame(){
     console.log("clicked the new game button")
     this._apiService.makeNewGame()
-    .then(response => {console.log(response); this.updateGame();this.client="hinting";
+    .then(response => {console.log(response); this.updateGame();this.client="hinting"; this.intervalCall();
       // this._apiService.getDeck()
       // .then(cards => {this.cards = cards; this.client="codeMaster"; console.log('got deck', this.cards)})
       // .catch(err => {console.log(err)});
@@ -77,7 +75,7 @@ export class AppComponent {
   }
   joinGame(GameId){
     this._apiService.joinGame(GameId)
-    .then(() => {this.client = "guessing"; this.updateGame();})
+    .then(() => {this.client = "guessing"; this.updateGame(); this.intervalCall();})
     .catch(err => {console.log(err)})
   }
   submitHint(){
@@ -85,10 +83,12 @@ export class AppComponent {
     this.updateGame();
     this.hint="";
     this.count=0;
-    this.intervalCall();
+    setTimeout(this.intervalCall(), 4000);
   }
   endTurn(){
+    console.log("end turn in app component.ts");
     this._apiService.endTurn();
     this.updateGame();
+    setTimeout(this.intervalCall(), 4000);
   }
 }
