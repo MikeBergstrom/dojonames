@@ -80,7 +80,9 @@ export class AppComponent {
   }
   submitHint(){
     this._apiService.submitHint(this.hint, this.count);
-    this.updateGame();
+    // setTimeout(this.updateGame(), 2000);
+    this.phase = "guessing";
+    // this.turn = this.turn == "red" ? "blue" : "red";
     this.hint="";
     this.count=0;
     setTimeout(this.intervalCall(), 4000);
@@ -88,7 +90,9 @@ export class AppComponent {
   endTurn(){
     console.log("end turn in app component.ts");
     this._apiService.endTurn();
-    this.updateGame();
+    this.turn = this.turn == "red" ? "blue" : "red";
+    this.phase ="hinting";
+    // this.updateGame();
     setTimeout(this.intervalCall(), 4000);
   }
 }
