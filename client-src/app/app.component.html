@@ -56,7 +56,7 @@
         <form (submit)="submitHint()">
           <div class='form-group'>
             <label class="hint-label">Hint: </label>
-            <input type="text" name="hint" [(ngModel)]="hint" class='form-control' placeholder="Hint">
+            <input id="hintInput" type="text" name="hint" autofocus="autofocus" [(ngModel)]="hint" class='form-control' placeholder="Hint">
           </div>
           <div class='form-group'>
           <label class="hint-label"># of cards: </label>
@@ -128,7 +128,7 @@
           <form (submit)="newGame()" class='new-game-form'#gameForm='ngForm'>
             <!-- <label class='name-input'>Enter Your Name:</label> -->
             <div class='form-group'>
-              <input type="text" name="gameName" [(ngModel)]="gameName" class='form-control name-input' required placeholder="Game Name">
+              <input id="gameName" autofocus="autofocus" type="text" name="gameName" [(ngModel)]="gameName" class='form-control name-input' required placeholder="Game Name">
             </div>
             <button type="submit" class='btn btn-default dn-button-start center-block' [disabled]="!gameForm.form.valid">Start a New Game</button>
           </form>

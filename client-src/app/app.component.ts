@@ -19,7 +19,7 @@ export class AppComponent {
   blueTeamScore = 0;
   LastHint = "";
   hint="";
-  count = 0;
+  count = 1;
   HintCount;
   games;
   gameName ="";
@@ -35,6 +35,8 @@ export class AppComponent {
     this._apiService.gameList()
     .then(games => {this.games = games; console.log('got game list', games)})
     .catch(err => {console.log(err)});
+    document.getElementById("hintInput").focus();
+    document.getElementById("gameName").focus();
   }
 
   clickCard(cardIdx){
