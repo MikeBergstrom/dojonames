@@ -23,7 +23,7 @@ export class AppComponent {
   HintCount;
   games;
   gameName ="";
-  timer=30;
+  timer=600;
 
   constructor(private _apiService: ApiService) {}
 
@@ -31,6 +31,7 @@ export class AppComponent {
     // this._apiService.getDeck()
     // .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
     // .catch(err => {console.log(err)});
+    console.log(this.timer);
     this._apiService.gameList()
     .then(games => {this.games = games; console.log('got game list', games)})
     .catch(err => {console.log(err)});
@@ -43,7 +44,7 @@ export class AppComponent {
         this.cards[cardIdx].isExposed = true;
         console.log("this is the card i am trying to update from the component", this.cards[cardIdx])
         this._apiService.updateDeck(this.cards[cardIdx].cardId)
-        .then(response => {console.log('response: ', response); this.updateGame(); this.timer=30; this.intervalCall();})
+        .then(response => {console.log('response: ', response); this.updateGame(); this.timer=600; this.intervalCall();})
         .catch(err => {console.log(err)});
       }
   }
@@ -51,7 +52,7 @@ export class AppComponent {
   newGame(){
     console.log("clicked the new game button", this.gameName)
     this._apiService.makeNewGame(this.gameName)
-    .then(response => {console.log(response); this.updateGame();this.client="hinting"; this.intervalCall();
+    .then(response => {console.log(response); this.updateGame();this.client="hinting";this.timer=600; this.intervalCall();
       // this._apiService.getDeck()
       // .then(cards => {this.cards = cards; this.client="codeMaster"; console.log('got deck', this.cards)})
       // .catch(err => {console.log(err)});
@@ -59,10 +60,9 @@ export class AppComponent {
     .catch(err => {console.log(err)});
   }
   updateGame(){
-    this.timer --;
-    console.log(this.timer);
+    console.log(this.timer, "timer counter");
     this._apiService.getGame()
-    .then(game => {this.turn = game.turn; this.redTeamScore = game.redScore; this.blueTeamScore= game.blueScore; this.phase = game.phase; this.LastHint = game.lastHint; this.HintCount = game.hintCount; this.GameId = game.gameId; console.log('got game', game)})
+    .then(game => {this.turn = game.turn; this.redTeamScore = game.redScore; this.blueTeamScore= game.blueScore; this.phase = game.phase; this.LastHint = game.lastHint; this.HintCount = game.hintCount; this.GameId = game.gameId; console.log('got game', game); this.timer--; console.log(this.timer)})
     .catch(err => {console.log(err)});
     this._apiService.getDeck()
     .then(cards => {this.cards = cards; console.log('got deck', this.cards)})
@@ -73,14 +73,14 @@ export class AppComponent {
   }
   intervalCall(){
     {
-      Observable.interval(1500).takeWhile(x => (this.phase != this.client || this.phase == "waiting")&& this.timer>0).take(30).subscribe(x => {
+      Observable.interval(1500).takeWhile(x => (this.phase != this.client || this.phase == "waiting")&& this.timer>0).subscribe(x => {
         this.updateGame();
       })
     }
   }
   joinGame(GameId){
     this._apiService.joinGame(GameId)
-    .then(() => {this.client = "guessing"; this.updateGame(); this,timer =30;this.intervalCall();})
+    .then(() => {this.client = "guessing"; this.updateGame(); this.timer =600;this.intervalCall();})
     .catch(err => {console.log(err)})
   }
   submitHint(){
@@ -90,7 +90,7 @@ export class AppComponent {
     // this.turn = this.turn == "red" ? "blue" : "red";
     this.hint="";
     this.count=0;
-    this.timer =30;
+    this.timer =600;
     setTimeout(this.intervalCall(), 4000);
   }
   endTurn(){
@@ -99,7 +99,7 @@ export class AppComponent {
     this.turn = this.turn == "red" ? "blue" : "red";
     this.phase ="hinting";
     // this.updateGame();
-    this.timer=30;
+    this.timer=600;
     setTimeout(this.intervalCall(), 4000);
   }
   resetGame(){
