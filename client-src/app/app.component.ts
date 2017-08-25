@@ -23,6 +23,7 @@ export class AppComponent {
   HintCount;
   games;
   gameName ="";
+  timer=30;
 
   constructor(private _apiService: ApiService) {}
 
@@ -42,7 +43,7 @@ export class AppComponent {
         this.cards[cardIdx].isExposed = true;
         console.log("this is the card i am trying to update from the component", this.cards[cardIdx])
         this._apiService.updateDeck(this.cards[cardIdx].cardId)
-        .then(response => {console.log('response: ', response); this.updateGame(); this.intervalCall();})
+        .then(response => {console.log('response: ', response); this.updateGame(); this.timer=30; this.intervalCall();})
         .catch(err => {console.log(err)});
       }
   }
@@ -58,6 +59,8 @@ export class AppComponent {
     .catch(err => {console.log(err)});
   }
   updateGame(){
+    this.timer --;
+    console.log(this.timer);
     this._apiService.getGame()
     .then(game => {this.turn = game.turn; this.redTeamScore = game.redScore; this.blueTeamScore= game.blueScore; this.phase = game.phase; this.LastHint = game.lastHint; this.HintCount = game.hintCount; this.GameId = game.gameId; console.log('got game', game)})
     .catch(err => {console.log(err)});
@@ -70,14 +73,14 @@ export class AppComponent {
   }
   intervalCall(){
     {
-      Observable.interval(1000).takeWhile(x => this.phase != this.client || this.phase == "waiting").subscribe(x => {
+      Observable.interval(1500).takeWhile(x => (this.phase != this.client || this.phase == "waiting")&& this.timer>0).take(30).subscribe(x => {
         this.updateGame();
       })
     }
   }
   joinGame(GameId){
     this._apiService.joinGame(GameId)
-    .then(() => {this.client = "guessing"; this.updateGame(); this.intervalCall();})
+    .then(() => {this.client = "guessing"; this.updateGame(); this,timer =30;this.intervalCall();})
     .catch(err => {console.log(err)})
   }
   submitHint(){
@@ -87,6 +90,7 @@ export class AppComponent {
     // this.turn = this.turn == "red" ? "blue" : "red";
     this.hint="";
     this.count=0;
+    this.timer =30;
     setTimeout(this.intervalCall(), 4000);
   }
   endTurn(){
@@ -95,6 +99,7 @@ export class AppComponent {
     this.turn = this.turn == "red" ? "blue" : "red";
     this.phase ="hinting";
     // this.updateGame();
+    this.timer=30;
     setTimeout(this.intervalCall(), 4000);
   }
   resetGame(){
